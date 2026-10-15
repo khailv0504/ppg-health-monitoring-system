@@ -1,0 +1,15 @@
+{
+  "environment": "development host CPU, TensorFlow 2.20.0, Python 3.12",
+  "unit_tests": {
+    "passed": 6,
+    "negative_bn_full_model_max_abs_diff": 8.754432201385498e-08
+  },
+  "end_to_end_smoke": {
+    "synthetic_windows": 64,
+    "epochs": 1,
+    "test_windows": 9,
+    "max_abs_diff_bpm": 2.2351741790771484e-08,
+    "pass": true
+  },
+  "scope": "Smoke checkpoint is undertrained. No full-training accuracy, Kaggle latency or MCU performance is claimed."
+}

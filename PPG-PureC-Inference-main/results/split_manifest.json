@@ -1,0 +1,17 @@
+{
+  "seed": 42,
+  "fs_hz": 125,
+  "window_samples": 1000,
+  "provenance": {
+    "kind": "synthetic",
+    "generator": "adapted upstream harmonic generator; exact arange/125 time axis",
+    "human_subjects": 0,
+    "split_unit": "independent simulation",
+    "noise_fraction": 0.2034
+  },
+  "windows": {
+    "test": 1500,
+    "val": 1500,
+    "train": 7000
+  }
+}

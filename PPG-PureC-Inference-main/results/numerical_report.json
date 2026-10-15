@@ -1,0 +1,81 @@
+{
+  "test_windows": 1500,
+  "split": {
+    "seed": 42,
+    "fs_hz": 125,
+    "window_samples": 1000,
+    "provenance": {
+      "kind": "synthetic",
+      "generator": "adapted upstream harmonic generator; exact arange/125 time axis",
+      "human_subjects": 0,
+      "split_unit": "independent simulation",
+      "noise_fraction": 0.2034
+    },
+    "windows": {
+      "test": 1500,
+      "val": 1500,
+      "train": 7000
+    }
+  },
+  "keras": {
+    "mae_bpm": 0.8303773371378581,
+    "rmse_bpm": 1.036848218396525,
+    "p95_abs_error_bpm": 2.079162216186523,
+    "within_5bpm_fraction": 1.0
+  },
+  "pure_c": {
+    "mae_bpm": 0.8303757731119792,
+    "rmse_bpm": 1.0368469842728945,
+    "p95_abs_error_bpm": 2.0791618347167966,
+    "within_5bpm_fraction": 1.0
+  },
+  "max_abs_diff_bpm": 3.0517578125e-05,
+  "mean_abs_diff_bpm": 4.38690185546875e-06,
+  "p95_abs_diff_bpm": 1.52587890625e-05,
+  "tolerance_bpm": 0.05,
+  "pass": true,
+  "stress": [
+    {
+      "name": "zero",
+      "keras_bpm": 1.9076955318450928,
+      "c_bpm": 1.9076957702636719,
+      "abs_diff_bpm": 2.384185791015625e-07
+    },
+    {
+      "name": "constant_dc",
+      "keras_bpm": 1.9076955318450928,
+      "c_bpm": 1.9076957702636719,
+      "abs_diff_bpm": 2.384185791015625e-07
+    },
+    {
+      "name": "tiny_signal",
+      "keras_bpm": 53.21990203857422,
+      "c_bpm": 53.21990203857422,
+      "abs_diff_bpm": 0.0
+    },
+    {
+      "name": "large_dc",
+      "keras_bpm": 81.10550689697266,
+      "c_bpm": 81.10550689697266,
+      "abs_diff_bpm": 0.0
+    },
+    {
+      "name": "low_bpm_45",
+      "keras_bpm": 46.842796325683594,
+      "c_bpm": 46.84279251098633,
+      "abs_diff_bpm": 3.814697265625e-06
+    },
+    {
+      "name": "high_bpm_150",
+      "keras_bpm": 128.38999938964844,
+      "c_bpm": 128.38999938964844,
+      "abs_diff_bpm": 0.0
+    },
+    {
+      "name": "random",
+      "keras_bpm": 134.49217224121094,
+      "c_bpm": 134.49217224121094,
+      "abs_diff_bpm": 0.0
+    }
+  ]
+}

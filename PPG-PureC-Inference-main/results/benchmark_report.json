@@ -1,0 +1,47 @@
+{
+  "environment": {
+    "tensorflow": "2.20.0",
+    "numpy": "2.1.3",
+    "python": "3.13.15",
+    "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "logical_cpus": 4,
+    "tf_intra_threads": 1,
+    "tf_inter_threads": 1,
+    "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "compile_flags": "-O3 -std=c11 -ffp-contract=off; no fast-math",
+    "hardware_benchmark": "host CPU only; not MCU",
+    "batch": 1,
+    "warmup": 20,
+    "iterations": 300,
+    "timing_scope": "wall clock including per-window normalization and Python dispatch on both paths",
+    "train_seconds": 175.08640990100002,
+    "config": {
+      "mode": "synthetic",
+      "n": 10000,
+      "epochs": 80,
+      "batch": 64,
+      "seed": 42
+    },
+    "upstream_commit": "649e3f2e92ab82738428cfd7d06d1187669442ab",
+    "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz"
+  },
+  "latency": {
+    "keras": {
+      "p50_ms": 5.0787505,
+      "p95_ms": 5.457444000000001,
+      "mean_ms": 5.11199058
+    },
+    "pure_c": {
+      "p50_ms": 1.662722,
+      "p95_ms": 1.9516746,
+      "mean_ms": 1.6833703166666665
+    },
+    "p50_speedup": 3.054479642417674
+  },
+  "memory": {
+    "weight_payload_bytes": 101124,
+    "model_struct_bytes": 101124,
+    "workspace_struct_bytes": 69536,
+    "note": "Static structures, NOT peak process RSS. MCU flash/linker usage must be measured separately."
+  }
+}

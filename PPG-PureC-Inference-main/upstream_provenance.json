@@ -1,0 +1,10 @@
+{
+  "url": "https://github.com/RAj5517/ppg_heart_rate_estimator",
+  "commit": "649e3f2e92ab82738428cfd7d06d1187669442ab",
+  "hf_model": "raj5517/ppg-heart-rate-estimator",
+  "sha256": {
+    "model.py": "d9fd75a45342f51fa6aa840b7cebfc6092e5f519a65e49afae0ccc5c3c18b8a7",
+    "upstream_reference/prepare_data_original.py": "01edf6dd6e54a11dad23a5d38fb4c5e724405fdde8a127debe0ecb075eb2ac3f",
+    "upstream_reference/train_original.py": "89e2f4b975d334a9613d00b527d9992f6dd9896000397c874bfaebf39b876415"
+  }
+}
