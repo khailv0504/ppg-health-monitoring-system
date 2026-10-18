@@ -1,0 +1,14 @@
+{
+  "upstream_repo": "https://github.com/RAj5517/ppg_heart_rate_estimator",
+  "upstream_commit": "649e3f2e92ab82738428cfd7d06d1187669442ab",
+  "source_license": "MIT",
+  "untouched_core_files": [
+    "model.py",
+    "train.py",
+    "convert_tflite.py",
+    "visualize.py",
+    "upload_to_hf.py",
+    "requirements.txt",
+    "LICENSE"
+  ]
+}

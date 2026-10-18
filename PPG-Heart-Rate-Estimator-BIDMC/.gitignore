@@ -1,0 +1,11 @@
+/.venv/
+/venv/
+/__pycache__/
+*.pyc
+/bidmc_raw/
+/data/*.npy
+/data/*.csv
+/data/*.json
+/data/*.png
+/models/
+/outputs/
