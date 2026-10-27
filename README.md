@@ -6,6 +6,8 @@ Hệ thống nghiên cứu và thử nghiệm theo dõi **nhịp tim (BPM)**, **
 
 Đây là dự án phục vụ học tập, nghiên cứu và trình diễn kỹ thuật. Kết quả AI đi kèm được đánh giá trên dữ liệu tổng hợp; repository chưa cung cấp bằng chứng kiểm định lâm sàng hoặc benchmark AI trên ESP32.
 
+**Truy cập nhanh:** [Ứng dụng HealthyMonitor](./App-HealthyMonitor/) · [Firmware ESP32](./firmwave_esp32/) · [AI/Pure C](./PPG-PureC-Inference-main/) · [Tài liệu dự án](./List_final/) · [Video demo ứng dụng](https://youtu.be/mWQcnb3vDYQ?si=PvWN5EhWjlb8o1w5).
+
 ## Mục lục
 
 - [1. Thành phần và cấu trúc repository](#repository)
@@ -13,29 +15,32 @@ Hệ thống nghiên cứu và thử nghiệm theo dõi **nhịp tim (BPM)**, **
 - [3. Chạy nhanh Pure C với trọng số có sẵn](#quickstart)
 - [4. Chuẩn bị Firebase](#firebase)
 - [5. Cài đặt và nạp firmware ESP32](#firmware)
-- [6. Cài đặt và chạy HealthyMonitor](#application)
+- [6. Cài đặt và chạy App-HealthyMonitor](#application)
 - [7. Dữ liệu và cơ chế cảnh báo](#data-alerts)
 - [8. Huấn luyện CNN–LSTM và xuất trọng số C](#ai-pipeline)
 - [9. Kết quả thực nghiệm đi kèm](#results)
 - [10. Kiểm chứng và khắc phục sự cố](#verification)
 - [11. Giới hạn và hướng tích hợp](#limitations)
 - [12. Hướng dẫn đọc mã nguồn, nguồn gốc và giấy phép](#references)
+- [13. Tài liệu dự án và video demo](#project-documents)
 
 <a id="repository"></a>
 
 ## 1. Thành phần và cấu trúc repository
 
-Đặt file này tại `ppg-health-monitoring-system/README.md`, cùng cấp với ba thư mục sau:
+README này nằm ở thư mục gốc `ppg-health-monitoring-system/`, cùng cấp với **5 thư mục thành phần** sau:
 
 | Thư mục | Vai trò | Điểm bắt đầu |
 | --- | --- | --- |
 | [firmwave_esp32/](./firmwave_esp32/) | Thu nhận Red/IR, tính BPM/SpO₂, hiển thị OLED và gửi Firebase | [firmwave_esp32.ino](./firmwave_esp32/firmwave_esp32.ino) |
 | [App-HealthyMonitor/](./App-HealthyMonitor/) | Ứng dụng React Native/Expo: xem số đo, lịch sử, báo cáo và cấu hình cảnh báo | [App.tsx](./App-HealthyMonitor/App.tsx), [package.json](./App-HealthyMonitor/package.json) |
 | [PPG-PureC-Inference-main/](./PPG-PureC-Inference-main/) | Huấn luyện CNN–LSTM, xuất trọng số, đối chiếu Keras–C và benchmark CPU | [Notebook Kaggle](./PPG-PureC-Inference-main/PPG_Kaggle_Train_Export_PureC.ipynb), [train_export_verify.py](./PPG-PureC-Inference-main/train_export_verify.py) |
+| [PPG-Heart-Rate-Estimator-BIDMC/](./PPG-Heart-Rate-Estimator-BIDMC/) | Pipeline tạo tập PPG **bán tổng hợp** dựa trên dạng sóng BIDMC; chia dữ liệu theo người và chuẩn bị tập kiểm thử thực | [README](./PPG-Heart-Rate-Estimator-BIDMC/README.md), [prepare_data.py](./PPG-Heart-Rate-Estimator-BIDMC/data/prepare_data.py) |
+| [List_final/](./List_final/) | Tài liệu phân công, slide tổng quan, bảng tiến độ và liên kết video demo | [Danh sách tài liệu](#project-documents) |
 
 Tên `firmwave_esp32` được giữ đúng theo thư mục hiện hữu. Thư mục gốc là nơi tập hợp các thành phần, không có một lệnh duy nhất để khởi chạy toàn bộ hệ thống.
 
-Nhánh AI **đã có checkpoint và trọng số** trong [results/](./PPG-PureC-Inference-main/results/). Có thể chạy suy luận C ngay mà không cần huấn luyện lại, không cần Firebase và không cần phần cứng cảm biến.
+Nhánh AI/Pure C **đã có checkpoint và trọng số** trong [results/](./PPG-PureC-Inference-main/results/). Có thể chạy suy luận C ngay mà không cần huấn luyện lại, không cần Firebase và không cần phần cứng cảm biến. Pipeline BIDMC-informed là thành phần dữ liệu riêng, **không đồng nghĩa** với việc các checkpoint và benchmark Pure C đã được đánh giá trên BIDMC.
 
 <a id="architecture"></a>
 
@@ -197,7 +202,7 @@ BPM trong vòng lặp liên tục chủ yếu được cập nhật từ khoản
 
 <a id="application"></a>
 
-## 6. Cài đặt và chạy HealthyMonitor
+## 6. Cài đặt và chạy App-HealthyMonitor
 
 ### 6.1. Môi trường
 
@@ -337,6 +342,8 @@ Hai chế độ dữ liệu được triển khai trong [data_pipeline.py](./PPG
 | `real_npz` | Nhận dữ liệu do người dùng chuẩn bị; yêu cầu ít nhất 5 người; chia train/validation/test độc lập theo `subject_id` |
 
 Pipeline tổng hợp gán motion artifact theo xác suất 20%, không cố định chính xác 8.000/2.000. Manifest đi kèm ghi tỷ lệ `0.2034`, tương ứng **2.034 cửa sổ có motion artifact trong 10.000 cửa sổ**. Chế độ này không có người tham gia thật; `subject_id` trong test vectors là mã mô phỏng. Không mô tả tập kết quả này là kiểm thử trên BIDMC/ICU hoặc dữ liệu lâm sàng.
+
+**Pipeline dữ liệu bổ sung:** [PPG-Heart-Rate-Estimator-BIDMC/](./PPG-Heart-Rate-Estimator-BIDMC/) sử dụng mẫu hình dạng nhịp từ [BIDMC PPG and Respiration Dataset (PhysioNet)](https://physionet.org/content/bidmc/1.0.0/) để sinh cửa sổ PPG bán tổng hợp và tổ chức train/validation/test theo người. Pipeline này có hướng dẫn riêng; **không được lấy số liệu ở mục 9 làm kết quả BIDMC** khi chưa huấn luyện và kiểm thử mô hình trên bộ dữ liệu tương ứng.
 
 Với `real_npz`, file cần các trường:
 
@@ -575,6 +582,7 @@ Các bước trên là công việc tích hợp tiếp theo, chưa phải chức
 | Lịch sử và báo cáo PDF | [historyService.ts](./App-HealthyMonitor/src/services/historyService.ts), [HistoryScreen.tsx](./App-HealthyMonitor/src/screens/HistoryScreen.tsx) |
 | Cấu hình và cảnh báo | [settingsService.ts](./App-HealthyMonitor/src/services/settingsService.ts), [alertService.ts](./App-HealthyMonitor/src/services/alertService.ts), [HeartMonitorController.ts](./App-HealthyMonitor/src/services/HeartMonitorController.ts) |
 | Dữ liệu và kiến trúc AI | [data_pipeline.py](./PPG-PureC-Inference-main/data_pipeline.py), [model.py](./PPG-PureC-Inference-main/model.py) |
+| Chuẩn bị và kiểm thử dataset BIDMC-informed | [prepare_data.py](./PPG-Heart-Rate-Estimator-BIDMC/data/prepare_data.py), [METHODS_VI.md](./PPG-Heart-Rate-Estimator-BIDMC/data/METHODS_VI.md), [test_dataset.py](./PPG-Heart-Rate-Estimator-BIDMC/tests/test_dataset.py) |
 | Huấn luyện, xuất checkpoint và benchmark | [train_export_verify.py](./PPG-PureC-Inference-main/train_export_verify.py), [export_weights.py](./PPG-PureC-Inference-main/export_weights.py) |
 | API và phép toán suy luận C | [ppg.h](./PPG-PureC-Inference-main/c/ppg.h), [ppg.c](./PPG-PureC-Inference-main/c/ppg.c), [c_bridge.py](./PPG-PureC-Inference-main/c_bridge.py) |
 | Kiểm chứng hai triển khai | [test_equivalence.py](./PPG-PureC-Inference-main/tests/test_equivalence.py), [numerical_report.json](./PPG-PureC-Inference-main/results/numerical_report.json) |
@@ -584,6 +592,8 @@ Các bước trên là công việc tích hợp tiếp theo, chưa phải chức
 - [README ứng dụng HealthyMonitor](./App-HealthyMonitor/README.md).
 - [README firmware](./firmwave_esp32/README.md).
 - [README AI/Pure C](./PPG-PureC-Inference-main/README.md) và [README_VI](./PPG-PureC-Inference-main/README_VI.md).
+- [README bộ dữ liệu BIDMC-informed](./PPG-Heart-Rate-Estimator-BIDMC/README.md) và [phương pháp tiếng Việt](./PPG-Heart-Rate-Estimator-BIDMC/data/METHODS_VI.md).
+- [Tài liệu báo cáo, phân công và demo](./List_final/).
 
 Một số mô tả trong README thành phần thuộc bản đóng gói trước: tài liệu firmware còn nhắc `code_max30102.txt`, trong khi file hiện tại là `firmwave_esp32.ino`; README AI còn dòng chưa có trọng số đã huấn luyện, trong khi repository này đã chứa `results/`. Hướng dẫn ở README gốc này dùng tên file và bộ kết quả thực tế của bản mã đang đi kèm.
 
@@ -597,8 +607,28 @@ Pipeline hiện huấn luyện checkpoint riêng và xuất checkpoint đó cho 
 | --- | --- |
 | Nhánh ứng dụng | [LICENSE](./App-HealthyMonitor/LICENSE): MIT notice của Expo / 650 Industries |
 | Nguồn AI upstream | [LICENSE_UPSTREAM](./PPG-PureC-Inference-main/LICENSE_UPSTREAM): MIT notice của Sayanendu Pramanik |
+| Nhánh BIDMC-informed | [LICENSE](./PPG-Heart-Rate-Estimator-BIDMC/LICENSE) cho mã nguồn; dữ liệu gốc BIDMC cần ghi công theo điều kiện của [PhysioNet](https://physionet.org/content/bidmc/1.0.0/) |
 | Thư mục gốc và firmware | Chưa có file LICENSE riêng xác định giấy phép chung cho toàn bộ phần này |
 
 Giữ các thông báo bản quyền nguồn khi sử dụng và phân phối lại. README không tự gán một giấy phép chung cho toàn repository.
 
 Khi dẫn dự án trong báo cáo, nên dẫn phiên bản commit/tag cụ thể và liên kết đến file nguồn hoặc kết quả tương ứng. Ví dụ: kiến trúc dẫn `model.py`, thiết kế C dẫn `c/ppg.c`, còn số liệu dẫn `results/numerical_report.json` và `results/benchmark_report.json` của cùng phiên bản.
+
+
+<a id="project-documents"></a>
+
+## 13. Tài liệu dự án và video demo
+
+Thư mục [`List_final/`](./List_final/) tập hợp các tệp phục vụ quản lý tiến độ, phân công và trình bày dự án. Các tệp Office được lưu dưới định dạng gốc để có thể tải về và chỉnh sửa.
+
+| Tài liệu | Định dạng | Mục đích |
+| --- | --- | --- |
+| [Phân_công_AI_project.docx](./List_final/Phân_công_AI_project.docx) | Word | Tài liệu phân công phần AI |
+| [Phân_công_final_project.docx](./List_final/Phân_công_final_project.docx) | Word | Tài liệu phân công dự án tổng thể |
+| [Slide__tong_quan.pptx](./List_final/Slide__tong_quan.pptx) | PowerPoint | Slide giới thiệu/tổng quan dự án |
+| [Tien_do.xlsx](./List_final/Tien_do.xlsx) | Excel | Bảng theo dõi tiến độ |
+| [Link demo app youtube.txt](./List_final/Link%20demo%20app%20youtube.txt) | Văn bản | Lưu địa chỉ video minh họa ứng dụng |
+
+**Video demo ứng dụng:** [Xem trên YouTube](https://youtu.be/mWQcnb3vDYQ?si=PvWN5EhWjlb8o1w5) (liên kết lấy từ tệp `Link demo app youtube.txt`).
+
+Các tệp này là tài liệu dự án; phần mô tả kiến trúc, lệnh chạy và số liệu kỹ thuật cần đối chiếu với mã nguồn cùng phiên bản commit để tránh sai khác khi cập nhật.
