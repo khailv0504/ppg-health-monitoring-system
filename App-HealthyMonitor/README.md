@@ -119,7 +119,7 @@ flowchart TD
 ## 4. Cấu trúc thư mục
 
 ```text
-HealthyMonitor-main/
+App-HealthyMonitor/
 ├── App.tsx                          # Entry component, khởi động Controller
 ├── app.json                         # Cấu hình Expo
 ├── package.json                     # Dependencies, npm scripts
@@ -177,7 +177,7 @@ npm --version
 Giải nén ZIP, mở terminal tại **thư mục chứa `package.json`**, sau đó chạy:
 
 ```bash
-cd HealthyMonitor-main
+cd App-HealthyMonitor
 npm ci
 ```
 

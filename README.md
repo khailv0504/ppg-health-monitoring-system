@@ -30,7 +30,7 @@ Hệ thống nghiên cứu và thử nghiệm theo dõi **nhịp tim (BPM)**, **
 | Thư mục | Vai trò | Điểm bắt đầu |
 | --- | --- | --- |
 | [firmwave_esp32/](./firmwave_esp32/) | Thu nhận Red/IR, tính BPM/SpO₂, hiển thị OLED và gửi Firebase | [firmwave_esp32.ino](./firmwave_esp32/firmwave_esp32.ino) |
-| [HealthyMonitor-main/](./HealthyMonitor-main/) | Ứng dụng React Native/Expo: xem số đo, lịch sử, báo cáo và cấu hình cảnh báo | [App.tsx](./HealthyMonitor-main/App.tsx), [package.json](./HealthyMonitor-main/package.json) |
+| [App-HealthyMonitor/](./App-HealthyMonitor/) | Ứng dụng React Native/Expo: xem số đo, lịch sử, báo cáo và cấu hình cảnh báo | [App.tsx](./App-HealthyMonitor/App.tsx), [package.json](./App-HealthyMonitor/package.json) |
 | [PPG-PureC-Inference-main/](./PPG-PureC-Inference-main/) | Huấn luyện CNN–LSTM, xuất trọng số, đối chiếu Keras–C và benchmark CPU | [Notebook Kaggle](./PPG-PureC-Inference-main/PPG_Kaggle_Train_Export_PureC.ipynb), [train_export_verify.py](./PPG-PureC-Inference-main/train_export_verify.py) |
 
 Tên `firmwave_esp32` được giữ đúng theo thư mục hiện hữu. Thư mục gốc là nơi tập hợp các thành phần, không có một lệnh duy nhất để khởi chạy toàn bộ hệ thống.
@@ -119,7 +119,7 @@ Firmware và ứng dụng phải cùng trỏ đến một Firebase project và c
 | Vị trí | Cấu hình cần đối chiếu |
 | --- | --- |
 | [firmwave_esp32.ino](./firmwave_esp32/firmwave_esp32.ino) | `WIFI_SSID`, `WIFI_PASSWORD`, `API_KEY`, `DATABASE_URL` |
-| [firebase.ts](./HealthyMonitor-main/src/config/firebase.ts) | `apiKey`, `authDomain`, `databaseURL`, `projectId`, `storageBucket`, `messagingSenderId`, `appId` |
+| [firebase.ts](./App-HealthyMonitor/src/config/firebase.ts) | `apiKey`, `authDomain`, `databaseURL`, `projectId`, `storageBucket`, `messagingSenderId`, `appId` |
 
 Các giá trị hiện được khai báo trực tiếp trong source; chưa có cơ chế tự đọc `.env`. Đổi hoặc tạo `.env` riêng sẽ chưa tác động đến chương trình nếu chưa sửa cách nạp cấu hình.
 
@@ -201,7 +201,7 @@ BPM trong vòng lặp liên tục chủ yếu được cập nhật từ khoản
 
 ### 6.1. Môi trường
 
-Các phiên bản dưới đây lấy từ [package.json](./HealthyMonitor-main/package.json) và [package-lock.json](./HealthyMonitor-main/package-lock.json):
+Các phiên bản dưới đây lấy từ [package.json](./App-HealthyMonitor/package.json) và [package-lock.json](./App-HealthyMonitor/package-lock.json):
 
 | Thành phần | Phiên bản khai báo |
 | --- | --- |
@@ -220,14 +220,14 @@ Dùng Node.js tương thích Expo SDK 57; tài liệu [Expo SDK 57](https://docs
 Sau khi hoàn thành cấu hình Firebase, bắt đầu tại thư mục gốc:
 
 ```bash
-cd HealthyMonitor-main
+cd App-HealthyMonitor
 npm ci
 npm start
 ```
 
 Mở bằng Expo Go tương thích SDK của dự án hoặc môi trường chạy đã cấu hình. Khi dùng kết nối LAN của Metro, máy tính và điện thoại cần truy cập được nhau trên mạng. Xem [hướng dẫn khởi chạy Expo](https://docs.expo.dev/get-started/start-developing/).
 
-Các script sẵn có, chạy **bên trong `HealthyMonitor-main`**:
+Các script sẵn có, chạy **bên trong `App-HealthyMonitor`**:
 
 | Lệnh | Tác dụng |
 | --- | --- |
@@ -570,10 +570,10 @@ Các bước trên là công việc tích hợp tiếp theo, chưa phải chức
 | Muốn tìm hiểu | File nên đọc |
 | --- | --- |
 | Thu nhận và xử lý tín hiệu cảm biến | [firmwave_esp32.ino](./firmwave_esp32/firmwave_esp32.ino) |
-| Luồng dữ liệu từ Firebase đến giao diện | [healthService.ts](./HealthyMonitor-main/src/services/healthService.ts) → [HeartMonitorController.ts](./HealthyMonitor-main/src/services/HeartMonitorController.ts) → [useHealthStore.ts](./HealthyMonitor-main/src/store/useHealthStore.ts) → [DashboardScreen.tsx](./HealthyMonitor-main/src/screens/DashboardScreen.tsx) |
-| Đăng nhập và điều hướng | [authService.ts](./HealthyMonitor-main/src/services/authService.ts), [AppNavigator.tsx](./HealthyMonitor-main/src/navigation/AppNavigator.tsx) |
-| Lịch sử và báo cáo PDF | [historyService.ts](./HealthyMonitor-main/src/services/historyService.ts), [HistoryScreen.tsx](./HealthyMonitor-main/src/screens/HistoryScreen.tsx) |
-| Cấu hình và cảnh báo | [settingsService.ts](./HealthyMonitor-main/src/services/settingsService.ts), [alertService.ts](./HealthyMonitor-main/src/services/alertService.ts), [HeartMonitorController.ts](./HealthyMonitor-main/src/services/HeartMonitorController.ts) |
+| Luồng dữ liệu từ Firebase đến giao diện | [healthService.ts](./App-HealthyMonitor/src/services/healthService.ts) → [HeartMonitorController.ts](./App-HealthyMonitor/src/services/HeartMonitorController.ts) → [useHealthStore.ts](./App-HealthyMonitor/src/store/useHealthStore.ts) → [DashboardScreen.tsx](./App-HealthyMonitor/src/screens/DashboardScreen.tsx) |
+| Đăng nhập và điều hướng | [authService.ts](./App-HealthyMonitor/src/services/authService.ts), [AppNavigator.tsx](./App-HealthyMonitor/src/navigation/AppNavigator.tsx) |
+| Lịch sử và báo cáo PDF | [historyService.ts](./App-HealthyMonitor/src/services/historyService.ts), [HistoryScreen.tsx](./App-HealthyMonitor/src/screens/HistoryScreen.tsx) |
+| Cấu hình và cảnh báo | [settingsService.ts](./App-HealthyMonitor/src/services/settingsService.ts), [alertService.ts](./App-HealthyMonitor/src/services/alertService.ts), [HeartMonitorController.ts](./App-HealthyMonitor/src/services/HeartMonitorController.ts) |
 | Dữ liệu và kiến trúc AI | [data_pipeline.py](./PPG-PureC-Inference-main/data_pipeline.py), [model.py](./PPG-PureC-Inference-main/model.py) |
 | Huấn luyện, xuất checkpoint và benchmark | [train_export_verify.py](./PPG-PureC-Inference-main/train_export_verify.py), [export_weights.py](./PPG-PureC-Inference-main/export_weights.py) |
 | API và phép toán suy luận C | [ppg.h](./PPG-PureC-Inference-main/c/ppg.h), [ppg.c](./PPG-PureC-Inference-main/c/ppg.c), [c_bridge.py](./PPG-PureC-Inference-main/c_bridge.py) |
@@ -581,7 +581,7 @@ Các bước trên là công việc tích hợp tiếp theo, chưa phải chức
 
 ### 12.2. Tài liệu thành phần
 
-- [README ứng dụng HealthyMonitor](./HealthyMonitor-main/README.md).
+- [README ứng dụng HealthyMonitor](./App-HealthyMonitor/README.md).
 - [README firmware](./firmwave_esp32/README.md).
 - [README AI/Pure C](./PPG-PureC-Inference-main/README.md) và [README_VI](./PPG-PureC-Inference-main/README_VI.md).
 
@@ -595,7 +595,7 @@ Pipeline hiện huấn luyện checkpoint riêng và xuất checkpoint đó cho 
 
 | Phạm vi | Thông tin giấy phép hiện có |
 | --- | --- |
-| Nhánh ứng dụng | [LICENSE](./HealthyMonitor-main/LICENSE): MIT notice của Expo / 650 Industries |
+| Nhánh ứng dụng | [LICENSE](./App-HealthyMonitor/LICENSE): MIT notice của Expo / 650 Industries |
 | Nguồn AI upstream | [LICENSE_UPSTREAM](./PPG-PureC-Inference-main/LICENSE_UPSTREAM): MIT notice của Sayanendu Pramanik |
 | Thư mục gốc và firmware | Chưa có file LICENSE riêng xác định giấy phép chung cho toàn bộ phần này |
 
